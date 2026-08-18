@@ -6,12 +6,19 @@ function Register() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+
+    if (password !== confirmPassword) {
+      setError('Passwords do not match');
+      return;
+    }
+
     try {
       const res = await api.post('/auth/register', { name, email, password });
       localStorage.setItem('token', res.data.token);
@@ -51,12 +58,22 @@ function Register() {
               style={{ width: '100%', padding: 11, marginTop: 4 }}
             />
           </div>
-          <div style={{ marginBottom: 18 }}>
+          <div style={{ marginBottom: 14 }}>
             <label style={{ fontSize: 14, fontWeight: 600 }}>Password</label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              required
+              style={{ width: '100%', padding: 11, marginTop: 4 }}
+            />
+          </div>
+          <div style={{ marginBottom: 18 }}>
+            <label style={{ fontSize: 14, fontWeight: 600 }}>Confirm Password</label>
+            <input
+              type="password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
               required
               style={{ width: '100%', padding: 11, marginTop: 4 }}
             />
