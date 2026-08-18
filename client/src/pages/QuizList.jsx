@@ -30,7 +30,7 @@ function QuizList() {
   return (
     <div style={{ maxWidth: 780, margin: '0 auto', padding: '24px 16px' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
-        <h1 style={{ margin: 0, fontSize: 24 }}>🧠 Neuron</h1>
+        <img src="/logo.png" alt="Neuron" className="logo" />
         {user ? (
           <div style={{ display: 'flex', gap: 16, alignItems: 'center', fontSize: 14 }}>
             <span>Hi, {user.name.split(' ')[0]}</span>

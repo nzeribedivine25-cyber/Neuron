@@ -26,7 +26,7 @@ function Register() {
     <div style={{ minHeight: '90vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 16px' }}>
       <div className="card" style={{ maxWidth: 380, width: '100%' }}>
         <div style={{ textAlign: 'center', marginBottom: 20 }}>
-          <div style={{ fontSize: 40 }}>🧠</div>
+          <img src="/logo.png" alt="Neuron" className="logo" />
           <h2 style={{ margin: '8px 0 0' }}>Create your account</h2>
           <p style={{ color: '#6b7280', fontSize: 14, margin: '4px 0 0' }}>Free practice, every course</p>
         </div>
