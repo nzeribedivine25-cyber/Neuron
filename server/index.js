@@ -6,6 +6,10 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+app.get('/', (req, res) => {
+  res.json({ message: 'Neuron API is running. Try /api/health for a status check.' });
+});
+
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', message: 'Neuron server running' });
 });
