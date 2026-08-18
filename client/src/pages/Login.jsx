@@ -27,7 +27,7 @@ function Login() {
         <div style={{ textAlign: 'center', marginBottom: 20 }}>
           <img src="/logo.png" alt="Neuron" className="logo" />
           <h2 style={{ margin: '8px 0 0' }}>Welcome back</h2>
-          <p style={{ color: '#6b7280', fontSize: 14, margin: '4px 0 0' }}>Log in to keep practicing</p>
+          <p style={{ color: '#8a8378', fontSize: 14, margin: '4px 0 0' }}>Log in to keep practicing</p>
         </div>
         <form onSubmit={handleSubmit}>
           <div style={{ marginBottom: 14 }}>

@@ -28,23 +28,38 @@ function Register() {
         <div style={{ textAlign: 'center', marginBottom: 20 }}>
           <img src="/logo.png" alt="Neuron" className="logo" />
           <h2 style={{ margin: '8px 0 0' }}>Create your account</h2>
-          <p style={{ color: '#6b7280', fontSize: 14, margin: '4px 0 0' }}>Free practice, every course</p>
+          <p style={{ color: '#8a8378', fontSize: 14, margin: '4px 0 0' }}>Free practice, every course</p>
         </div>
         <form onSubmit={handleSubmit}>
           <div style={{ marginBottom: 14 }}>
             <label style={{ fontSize: 14, fontWeight: 600 }}>Name</label>
-            <input type="text" value={name} onChange={(e) => setName(e.target.value)} required
-              style={{ width: '100%', padding: 11, marginTop: 4 }} />
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+              style={{ width: '100%', padding: 11, marginTop: 4 }}
+            />
           </div>
           <div style={{ marginBottom: 14 }}>
             <label style={{ fontSize: 14, fontWeight: 600 }}>Email</label>
-            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required
-              style={{ width: '100%', padding: 11, marginTop: 4 }} />
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              style={{ width: '100%', padding: 11, marginTop: 4 }}
+            />
           </div>
           <div style={{ marginBottom: 18 }}>
             <label style={{ fontSize: 14, fontWeight: 600 }}>Password</label>
-            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required
-              style={{ width: '100%', padding: 11, marginTop: 4 }} />
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              style={{ width: '100%', padding: 11, marginTop: 4 }}
+            />
           </div>
           {error && <p style={{ color: '#dc2626', fontSize: 14 }}>{error}</p>}
           <button type="submit" style={{ width: '100%' }}>Register</button>

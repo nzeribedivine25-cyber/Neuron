@@ -58,18 +58,18 @@ function QuizAttempt() {
 
   const answeredCount = Object.keys(answers).length;
 
-  if (error) return <div style={{ maxWidth: 640, margin: '60px auto', padding: '0 16px' }}><p style={{ color: '#dc2626' }}>{error}</p></div>;
+  if (error) return <div style={{ maxWidth: 640, margin: '60px auto', padding: '0 16px' }}><p style={{ color: '#c0392b' }}>{error}</p></div>;
   if (!quiz) return <div style={{ maxWidth: 640, margin: '60px auto', padding: '0 16px' }}><p>Loading quiz...</p></div>;
 
   return (
     <div style={{ maxWidth: 640, margin: '0 auto', padding: '24px 16px' }}>
       <h2 style={{ marginBottom: 4 }}>{quiz.title}</h2>
-      <p style={{ color: '#6b7280', fontSize: 14, marginTop: 0 }}>
+      <p style={{ color: '#8a8378', fontSize: 14, marginTop: 0 }}>
         {answeredCount} of {quiz.questions.length} answered
       </p>
 
       {timeLeft !== null && (
-        <div className="card" style={{ marginBottom: 16, padding: 12, textAlign: 'center', fontWeight: 800, fontSize: 18, color: timeLeft < 30 ? '#dc2626' : '#4f46e5' }}>
+        <div className="card" style={{ marginBottom: 16, padding: 12, textAlign: 'center', fontWeight: 800, fontSize: 18, color: timeLeft < 30 ? '#c0392b' : '#e8622c' }}>
           ⏱ {Math.floor(timeLeft / 60)}:{String(timeLeft % 60).padStart(2, '0')}
         </div>
       )}
@@ -81,8 +81,8 @@ function QuizAttempt() {
             q.options.map(opt => (
               <label key={opt} style={{
                 display: 'block', marginBottom: 8, padding: '10px 12px', borderRadius: 10, cursor: 'pointer',
-                background: answers[q.id] === opt ? '#eef0ff' : 'transparent',
-                border: answers[q.id] === opt ? '1.5px solid #4f46e5' : '1.5px solid #e2e4ec'
+                background: answers[q.id] === opt ? '#fdf0e8' : 'transparent',
+                border: answers[q.id] === opt ? '1.5px solid #e8622c' : '1.5px solid #e6dbc8'
               }}>
                 <input
                   type="radio" name={`q-${q.id}`} value={opt}

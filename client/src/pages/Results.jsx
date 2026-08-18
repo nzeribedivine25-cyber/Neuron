@@ -23,8 +23,8 @@ function Results() {
       <div className="card" style={{ maxWidth: 420, width: '100%', textAlign: 'center' }}>
         <div style={{ fontSize: 40 }}>{emoji}</div>
         <h2 style={{ margin: '8px 0 0' }}>Quiz Complete</h2>
-        <p style={{ fontSize: 56, margin: '10px 0', color: '#4f46e5', fontWeight: 800 }}>{percent}%</p>
-        <p style={{ color: '#6b7280' }}>Score: {data.score} / {data.total_points}</p>
+        <p style={{ fontSize: 56, margin: '10px 0', color: '#e8622c', fontWeight: 800 }}>{percent}%</p>
+        <p style={{ color: '#8a8378' }}>Score: {data.score} / {data.total_points}</p>
         <Link to="/"><button style={{ marginTop: 8 }}>Back to quizzes</button></Link>
       </div>
     </div>
