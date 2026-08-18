@@ -56,6 +56,36 @@ function Progress() {
         </div>
       )}
 
+{Object.entries(
+  completed.reduce((acc, a) => {
+    const key = a.topic || 'Other';
+    if (!acc[key]) acc[key] = { correct: 0, total: 0 };
+    acc[key].correct += a.score;
+    acc[key].total += a.total_points;
+    return acc;
+  }, {})
+).length > 0 && (
+  <div className="card" style={{ marginBottom: 24 }}>
+    <h3 style={{ marginTop: 0, fontSize: 16 }}>Accuracy by Course</h3>
+    {Object.entries(
+      completed.reduce((acc, a) => {
+        const key = a.topic || 'Other';
+        if (!acc[key]) acc[key] = { correct: 0, total: 0 };
+        acc[key].correct += a.score;
+        acc[key].total += a.total_points;
+        return acc;
+      }, {})
+    ).map(([course, stats]) => (
+      <div key={course} style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', fontSize: 14 }}>
+        <span>{course}</span>
+        <span style={{ fontWeight: 700, color: stats.total > 0 && (stats.correct / stats.total) < 0.5 ? '#c0392b' : '#1a7f37' }}>
+          {stats.total > 0 ? Math.round((stats.correct / stats.total) * 100) : 0}%
+        </span>
+      </div>
+    ))}
+  </div>
+)}
+
       <h3>Attempt History</h3>
       {data.attempts.length === 0 && <p style={{ color: '#8a8378' }}>No attempts yet.</p>}
       <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>

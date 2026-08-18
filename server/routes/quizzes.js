@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const pool = require('../db');
 
-// GET /api/courses — list all courses, for dropdowns
 router.get('/courses/list', async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM courses ORDER BY code');
@@ -12,7 +11,6 @@ router.get('/courses/list', async (req, res) => {
   }
 });
 
-// POST /api/quizzes — create a quiz with questions, tied to a course
 router.post('/', async (req, res) => {
   const { title, course_id, mode, time_limit_seconds, created_by, questions } = req.body;
 
@@ -35,8 +33,8 @@ router.post('/', async (req, res) => {
 
     for (const q of questions) {
       await client.query(
-        'INSERT INTO questions (quiz_id, type, question_text, options, correct_answer, points) VALUES ($1,$2,$3,$4,$5,$6)',
-        [quizId, q.type, q.question_text, q.options ? JSON.stringify(q.options) : null, q.correct_answer, q.points || 1]
+        'INSERT INTO questions (quiz_id, type, question_text, options, correct_answer, points, explanation) VALUES ($1,$2,$3,$4,$5,$6,$7)',
+        [quizId, q.type, q.question_text, q.options ? JSON.stringify(q.options) : null, q.correct_answer, q.points || 1, q.explanation || null]
       );
     }
 
@@ -50,11 +48,10 @@ router.post('/', async (req, res) => {
   }
 });
 
-// GET /api/quizzes — list all quizzes, grouped-ready (includes course info)
 router.get('/', async (req, res) => {
   try {
     const result = await pool.query(
-      `SELECT q.id, q.title, q.mode, q.time_limit_seconds, q.created_at,
+      `SELECT q.id, q.title, q.mode, q.time_limit_seconds, q.created_at, q.created_by,
               c.id AS course_id, c.code AS course_code, c.name AS course_name
        FROM quizzes q
        LEFT JOIN courses c ON q.course_id = c.id
@@ -66,7 +63,6 @@ router.get('/', async (req, res) => {
   }
 });
 
-// GET /api/quizzes/:id — quiz + questions (correct_answer stripped)
 router.get('/:id', async (req, res) => {
   try {
     const quizResult = await pool.query(
@@ -85,6 +81,25 @@ router.get('/:id', async (req, res) => {
     );
 
     res.json({ ...quizResult.rows[0], questions: questionsResult.rows });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// DELETE /api/quizzes/:id — only the creator can delete
+router.delete('/:id', async (req, res) => {
+  const { user_id } = req.body;
+  try {
+    const quizResult = await pool.query('SELECT created_by FROM quizzes WHERE id = $1', [req.params.id]);
+    if (quizResult.rows.length === 0) {
+      return res.status(404).json({ error: 'Quiz not found' });
+    }
+    if (quizResult.rows[0].created_by !== user_id) {
+      return res.status(403).json({ error: 'Only the creator can delete this quiz' });
+    }
+    await pool.query('DELETE FROM questions WHERE quiz_id = $1', [req.params.id]);
+    await pool.query('DELETE FROM quizzes WHERE id = $1', [req.params.id]);
+    res.json({ message: 'Quiz deleted' });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

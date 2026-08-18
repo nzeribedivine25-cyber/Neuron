@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const pool = require('../db');
 
-// POST /api/quizzes/:quizId/attempts — start an attempt
 router.post('/:quizId/attempts', async (req, res) => {
   const { quizId } = req.params;
   const { user_id } = req.body;
@@ -39,10 +38,9 @@ router.post('/:quizId/attempts', async (req, res) => {
   }
 });
 
-// PUT /api/attempts/:id — submit answers, score, complete
 router.put('/attempt/:id', async (req, res) => {
   const { id } = req.params;
-  const { answers } = req.body; // [{ question_id, user_answer }]
+  const { answers } = req.body;
 
   if (!answers || !Array.isArray(answers)) {
     return res.status(400).json({ error: 'answers array is required' });
@@ -65,6 +63,7 @@ router.put('/attempt/:id', async (req, res) => {
 
     let score = 0;
     let totalPoints = 0;
+    const breakdown = [];
 
     for (const ans of answers) {
       const qResult = await client.query('SELECT * FROM questions WHERE id = $1', [ans.question_id]);
@@ -80,6 +79,15 @@ router.put('/attempt/:id', async (req, res) => {
         'INSERT INTO answers (attempt_id, question_id, user_answer, is_correct) VALUES ($1,$2,$3,$4)',
         [id, ans.question_id, ans.user_answer, isCorrect]
       );
+
+      breakdown.push({
+        question_id: question.id,
+        question_text: question.question_text,
+        user_answer: ans.user_answer,
+        correct_answer: question.correct_answer,
+        is_correct: isCorrect,
+        explanation: question.explanation
+      });
     }
 
     await client.query(
@@ -88,7 +96,7 @@ router.put('/attempt/:id', async (req, res) => {
     );
 
     await client.query('COMMIT');
-    res.json({ attempt_id: id, score, total_points: totalPoints });
+    res.json({ attempt_id: id, score, total_points: totalPoints, breakdown });
   } catch (err) {
     await client.query('ROLLBACK');
     res.status(500).json({ error: err.message });
