@@ -61,29 +61,39 @@ router.put('/attempt/:id', async (req, res) => {
       return res.status(403).json({ error: 'This attempt has already been submitted' });
     }
 
+    // Fetch EVERY question that belongs to this quiz — not just the ones submitted
+    const allQuestionsResult = await client.query(
+      'SELECT * FROM questions WHERE quiz_id = $1',
+      [attempt.quiz_id]
+    );
+    const allQuestions = allQuestionsResult.rows;
+
+    // Map submitted answers by question_id for quick lookup
+    const submittedMap = {};
+    for (const a of answers) {
+      submittedMap[a.question_id] = a.user_answer;
+    }
+
     let score = 0;
     let totalPoints = 0;
     const breakdown = [];
+    const normalize = (s) => (s || '').toString().trim().toLowerCase();
 
-    for (const ans of answers) {
-      const qResult = await client.query('SELECT * FROM questions WHERE id = $1', [ans.question_id]);
-      if (qResult.rows.length === 0) continue;
-      const question = qResult.rows[0];
+    for (const question of allQuestions) {
       totalPoints += question.points;
-
-      const normalize = (s) => (s || '').toString().trim().toLowerCase();
-      const isCorrect = normalize(ans.user_answer) === normalize(question.correct_answer);
+      const userAnswer = submittedMap.hasOwnProperty(question.id) ? submittedMap[question.id] : null;
+      const isCorrect = userAnswer !== null && normalize(userAnswer) === normalize(question.correct_answer);
       if (isCorrect) score += question.points;
 
       await client.query(
         'INSERT INTO answers (attempt_id, question_id, user_answer, is_correct) VALUES ($1,$2,$3,$4)',
-        [id, ans.question_id, ans.user_answer, isCorrect]
+        [id, question.id, userAnswer, isCorrect]
       );
 
       breakdown.push({
         question_id: question.id,
         question_text: question.question_text,
-        user_answer: ans.user_answer,
+        user_answer: userAnswer,
         correct_answer: question.correct_answer,
         is_correct: isCorrect,
         explanation: question.explanation
