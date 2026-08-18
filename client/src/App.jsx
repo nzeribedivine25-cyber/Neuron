@@ -6,8 +6,6 @@ import QuizAttempt from './pages/QuizAttempt';
 import Results from './pages/Results';
 import Progress from './pages/Progress';
 import CreateQuiz from './pages/CreateQuiz';
-// ...inside <Routes>:
-<Route path="/create" element={<CreateQuiz />} />
 
 function App() {
   return (
@@ -19,6 +17,7 @@ function App() {
         <Route path="/quiz/:id" element={<QuizAttempt />} />
         <Route path="/results/:attemptId" element={<Results />} />
         <Route path="/progress/:userId" element={<Progress />} />
+        <Route path="/create" element={<CreateQuiz />} />
       </Routes>
     </BrowserRouter>
   );

@@ -73,3 +73,36 @@ npm run dev
 - Deployed link: https://neuron-sync.vercel.app
 - Source code: this repository
 - Demo video: [link to be added]
+
+## Known Limitations & Future Work
+
+This is a capstone MVP, and some gaps are deliberately left for future iteration rather than rushed under deadline pressure:
+
+**Security**
+
+- No rate limiting on login/register endpoints (brute-force risk)
+- JWT tokens have no revocation mechanism — once issued, a token is valid until its 7-day expiry
+- No server-side authentication middleware verifying the logged-in user on protected actions (e.g. quiz creation/deletion currently trust the `user_id` sent in the request body rather than a verified session token)
+- Limited input validation on quiz creation — no sanitization or size limits on submitted content
+
+**Account management**
+
+- No email verification on registration
+- No password reset flow
+
+**Content**
+
+- Quiz content is a mix of sources: some courses (GST 112, PHY 108) draw from compiled past-question sets and lab material; others use general syllabus-level content where verified source material wasn't available. This is disclosed for transparency — content should be reviewed by course instructors before use in a real academic setting.
+- No content moderation/review step before a submitted quiz becomes visible to other users
+- Answer explanations exist in the schema but are only populated for newly created questions going forward, not retroactively for existing content
+
+**Scale & reliability**
+
+- Backend is hosted on Render's free tier, which spins down after inactivity — the first request after idle time may take 30–60 seconds
+- No automated tests
+- No pagination on the quiz list (fine at current scale, would need addressing with significant content growth)
+
+**Learning features**
+
+- No spaced repetition or adaptive difficulty
+- Progress tracking shows per-course accuracy and attempt history, but doesn't yet identify specific weak topics within a course or suggest targeted review
