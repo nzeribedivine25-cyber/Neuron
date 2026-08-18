@@ -15,10 +15,7 @@ function QuizAttempt() {
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
-    if (!user) {
-      navigate('/login');
-      return;
-    }
+    if (!user) { navigate('/login'); return; }
     api.get(`/quizzes/${id}`).then(res => {
       setQuiz(res.data);
       return api.post(`/quizzes/${id}/attempts`, { user_id: user.id });
@@ -59,41 +56,45 @@ function QuizAttempt() {
     }
   };
 
-  if (error) return <div style={{ maxWidth: 600, margin: '60px auto', padding: '0 16px' }}><p style={{ color: '#dc2626' }}>{error}</p></div>;
-  if (!quiz) return <div style={{ maxWidth: 600, margin: '60px auto', padding: '0 16px' }}><p>Loading quiz...</p></div>;
+  const answeredCount = Object.keys(answers).length;
+
+  if (error) return <div style={{ maxWidth: 640, margin: '60px auto', padding: '0 16px' }}><p style={{ color: '#dc2626' }}>{error}</p></div>;
+  if (!quiz) return <div style={{ maxWidth: 640, margin: '60px auto', padding: '0 16px' }}><p>Loading quiz...</p></div>;
 
   return (
-    <div style={{ maxWidth: 600, margin: '40px auto', padding: '0 16px' }}>
-      <h2>{quiz.title}</h2>
+    <div style={{ maxWidth: 640, margin: '0 auto', padding: '24px 16px' }}>
+      <h2 style={{ marginBottom: 4 }}>{quiz.title}</h2>
+      <p style={{ color: '#6b7280', fontSize: 14, marginTop: 0 }}>
+        {answeredCount} of {quiz.questions.length} answered
+      </p>
+
       {timeLeft !== null && (
-        <div className="card" style={{ marginBottom: 16, padding: 10, textAlign: 'center', fontWeight: 700, color: timeLeft < 30 ? '#dc2626' : '#1a1a2e' }}>
+        <div className="card" style={{ marginBottom: 16, padding: 12, textAlign: 'center', fontWeight: 800, fontSize: 18, color: timeLeft < 30 ? '#dc2626' : '#4f46e5' }}>
           ⏱ {Math.floor(timeLeft / 60)}:{String(timeLeft % 60).padStart(2, '0')}
         </div>
       )}
 
       {quiz.questions.map((q, i) => (
         <div key={q.id} className="card" style={{ marginBottom: 14 }}>
-          <p style={{ marginTop: 0 }}><strong>Q{i + 1}.</strong> {q.question_text}</p>
+          <p style={{ marginTop: 0, fontWeight: 600 }}>Q{i + 1}. {q.question_text}</p>
           {q.type === 'mcq' ? (
             q.options.map(opt => (
-              <label key={opt} style={{ display: 'block', marginBottom: 8, cursor: 'pointer' }}>
+              <label key={opt} style={{
+                display: 'block', marginBottom: 8, padding: '10px 12px', borderRadius: 10, cursor: 'pointer',
+                background: answers[q.id] === opt ? '#eef0ff' : 'transparent',
+                border: answers[q.id] === opt ? '1.5px solid #4f46e5' : '1.5px solid #e2e4ec'
+              }}>
                 <input
-                  type="radio"
-                  name={`q-${q.id}`}
-                  value={opt}
+                  type="radio" name={`q-${q.id}`} value={opt}
                   checked={answers[q.id] === opt}
                   onChange={() => handleAnswerChange(q.id, opt)}
-                  style={{ marginRight: 8 }}
+                  style={{ marginRight: 10 }}
                 /> {opt}
               </label>
             ))
           ) : (
-            <input
-              type="text"
-              value={answers[q.id] || ''}
-              onChange={(e) => handleAnswerChange(q.id, e.target.value)}
-              style={{ width: '100%', padding: 10 }}
-            />
+            <input type="text" value={answers[q.id] || ''} onChange={(e) => handleAnswerChange(q.id, e.target.value)}
+              style={{ width: '100%', padding: 11 }} />
           )}
         </div>
       ))}

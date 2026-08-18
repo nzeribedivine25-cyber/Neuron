@@ -22,34 +22,28 @@ function Login() {
   };
 
   return (
-    <div style={{ maxWidth: 380, margin: '80px auto', padding: '0 16px' }}>
-      <div className="card">
-        <h2 style={{ marginTop: 0 }}>🧠 Log in to Neuron</h2>
+    <div style={{ minHeight: '90vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 16px' }}>
+      <div className="card" style={{ maxWidth: 380, width: '100%' }}>
+        <div style={{ textAlign: 'center', marginBottom: 20 }}>
+          <div style={{ fontSize: 40 }}>🧠</div>
+          <h2 style={{ margin: '8px 0 0' }}>Welcome back</h2>
+          <p style={{ color: '#6b7280', fontSize: 14, margin: '4px 0 0' }}>Log in to keep practicing</p>
+        </div>
         <form onSubmit={handleSubmit}>
           <div style={{ marginBottom: 14 }}>
             <label style={{ fontSize: 14, fontWeight: 600 }}>Email</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              style={{ width: '100%', padding: 10, marginTop: 4 }}
-            />
+            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required
+              style={{ width: '100%', padding: 11, marginTop: 4 }} />
           </div>
-          <div style={{ marginBottom: 14 }}>
+          <div style={{ marginBottom: 18 }}>
             <label style={{ fontSize: 14, fontWeight: 600 }}>Password</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              style={{ width: '100%', padding: 10, marginTop: 4 }}
-            />
+            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required
+              style={{ width: '100%', padding: 11, marginTop: 4 }} />
           </div>
           {error && <p style={{ color: '#dc2626', fontSize: 14 }}>{error}</p>}
           <button type="submit" style={{ width: '100%' }}>Log In</button>
         </form>
-        <p style={{ fontSize: 14, marginTop: 16, marginBottom: 0 }}>
+        <p style={{ fontSize: 14, marginTop: 16, marginBottom: 0, textAlign: 'center' }}>
           No account? <Link to="/register">Register</Link>
         </p>
       </div>
